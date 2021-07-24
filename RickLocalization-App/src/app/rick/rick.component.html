@@ -1,0 +1,64 @@
+<form [formGroup]="registerForm">
+  <mat-tab-group animationDuration="100ms">
+
+    <mat-tab label="Rick">
+      <mat-form-field class="example-full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput placeholder="Insira o nome do Rick" formControlName="name">
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput placeholder="Insira uma descrição sobre este Rick" formControlName="description"></textarea>
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>QI</mat-label>
+        <textarea matInput placeholder="Insira o QI do Rick" formControlName="qi"></textarea>
+      </mat-form-field>
+    </mat-tab>
+
+    <mat-tab label="Morty">
+      <div class="col-md-6" formArrayName="morty">
+          <mat-form-field class="example-full-width">
+            <mat-label>Nome</mat-label>
+            <input matInput placeholder="Insira o nome do Morty" formControlName="name">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput placeholder="Insira uma descrição sobre este Morty" formControlName="description"></textarea>
+          </mat-form-field>
+      </div>
+    </mat-tab>
+
+    <!-- <mat-tab label="Dimensão">
+      <div class="col-md-6" formArrayName="mortys">
+          <mat-form-field class="example-full-width">
+            <mat-label>Códgo da Dimensão</mat-label>
+            <input matInput placeholder="Insira o Código da Dimensão" formControlName="code">
+          </mat-form-field>
+      </div>
+    </mat-tab> -->
+    
+    <mat-tab label="Dimensão">
+      <div class="col-md-6" formArrayName="dimensions" *ngFor="let dimension of dimensions.controls; let i = index">
+        <div [formGroupName]="i">
+          <mat-form-field class="example-full-width">
+            <mat-label>Código da Dimensão</mat-label>
+            <input matInput placeholder="Insira o codigo da Dimensao" formControlName="code">
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+<mat-divider></mat-divider>
+<section>
+  <div class="example-button-row">
+    <button mat-raised-button color="warn" [routerLink]="['/clientes']"> VOLTAR </button>
+    <button mat-raised-button color="primary" [disabled]="!registerForm.valid" (click)="saveRick();"> SALVAR </button>
+    <button mat-raised-button color="link" [disabled]="registerForm.value.id == 0" (click)="this.openDialog()"> VIAJAR </button>
+    <button mat-raised-button color="accent" [disabled]="registerForm.value.id == 0" [routerLink]="['/rick',registerForm.value.id,'detail','history']"> HISTÓRICO </button>
+  </div>
+</section>
+<mat-divider></mat-divider>
+<h1>{{registerForm.value | json}}</h1>
+</form>
