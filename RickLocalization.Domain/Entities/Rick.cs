@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RickLocalization.Domain
+namespace RickLocalization.Domain.Entities
 {
-    public class Rick : Pessoa
+    public class Rick : Person
     {
+        public string Image { get; set; }
+        
         public int QI { get; set; }
 
         public Morty Morty { get; set; }

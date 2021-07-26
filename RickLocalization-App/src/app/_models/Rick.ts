@@ -7,7 +7,6 @@ export class Rick {
     description: string;
     image: string;
     qi: number;
-    // mortys: Morty[];
     mortys: Morty;
     dimensions: Dimension[];
 }

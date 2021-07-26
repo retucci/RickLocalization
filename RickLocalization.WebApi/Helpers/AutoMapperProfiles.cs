@@ -1,5 +1,5 @@
 using AutoMapper;
-using RickLocalization.Domain;
+using RickLocalization.Domain.Entities;
 using RickLocalization.WebApi.Dto;
 
 namespace RickLocalization.WebApi.Helpers
@@ -8,9 +8,9 @@ namespace RickLocalization.WebApi.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Rick,RickDto>();
+            CreateMap<Rick,RickDto>().ReverseMap();
             CreateMap<Morty,MortyDto>().ReverseMap();
             CreateMap<Dimension,DimensionDto>().ReverseMap();
-        }
+         }
     }
 }

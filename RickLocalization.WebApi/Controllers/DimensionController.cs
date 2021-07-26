@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RickLocalization.Domain;
+using RickLocalization.Domain.Entities;
 using RickLocalization.Repository;
 using RickLocalization.WebApi.Dto;
-using System.Linq;
 
 namespace RickLocalization.WebApi.Controllers
 {
@@ -38,6 +37,21 @@ namespace RickLocalization.WebApi.Controllers
             }
 
             return BadRequest("Error Post");
+        }
+
+        [HttpGet("getByRickId/{rickId}")]
+        public async Task<IActionResult> Get(int rickId)
+        {
+            try
+            {
+                var results = await _repository.GetDimensionsByRickId(rickId);
+                var resultsDto = _mapper.Map<IEnumerable<DimensionDto>>(results);
+                return Ok(resultsDto);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Dimensões não encontradas para esse Rick: {ex.Message}");
+            }
         }
     }
 }

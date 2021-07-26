@@ -15,6 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using AutoMapper;
 using System.IO;
+using Microsoft.Extensions.FileProviders;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Newtonsoft.Json.Serialization;
 
 namespace RickLocalization.WebApi
 {
@@ -34,14 +38,10 @@ namespace RickLocalization.WebApi
             .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-            //Injeção do Contexto
             var conn = Configuration.GetConnectionString("DefaultConnection").Replace("%ROOTPATH%", Directory.GetParent(Environment.CurrentDirectory).ToString());
             services.AddDbContext<RickLocalizationContext>(x=> x.UseSqlite(conn));
-            //Injeção do Repositório no Controller
             services.AddScoped<IRickLocalizationRepository,RickLocalizationRepository>();
-            //Injeção dos Dtos
             services.AddAutoMapper();
-            //Permitindo requisições externas
             services.AddCors();
         }
 
@@ -53,7 +53,14 @@ namespace RickLocalization.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            //Permitindo requisições externas
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath, "Images")),
+                RequestPath = "/Images"
+            });
+            app.UseDefaultFiles();
+
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseHttpsRedirection();

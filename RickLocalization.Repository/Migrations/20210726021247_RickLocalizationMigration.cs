@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RickLocalization.Repository.Migrations
 {
-    public partial class init : Migration
+    public partial class RickLocalizationMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,8 @@ namespace RickLocalization.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Code = table.Column<string>(type: "varchar(4)", nullable: true),
+                    Original = table.Column<int>(nullable: false),
+                    Code = table.Column<string>(type: "varchar(4)", nullable: false),
                     TravelDate = table.Column<DateTime>(type: "DateTime", nullable: false),
                     RickId = table.Column<int>(nullable: false)
                 },
@@ -52,7 +53,6 @@ namespace RickLocalization.Repository.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "varchar(100)", nullable: false),
                     Description = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Image = table.Column<string>(nullable: true),
                     RickId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

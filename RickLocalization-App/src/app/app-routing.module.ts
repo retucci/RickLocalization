@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HistoryComponent } from './history/history.component';
 import { RickComponent } from './rick/rick.component';
+import { HistoryComponent } from './rick/history/history.component';
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent},

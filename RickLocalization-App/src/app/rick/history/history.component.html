@@ -1,0 +1,17 @@
+<mat-list>
+  <div mat-subheader>Viagens Dimensionais</div>
+  <mat-list-item *ngFor="let dimension of dimensions">
+    <mat-icon mat-list-icon>{{dimension.original == 1 || this.originalDimension.code == dimension.code ? 'home' : 'arrow_forward'}}</mat-icon>
+    <mat-icon mat-list-icon [fxShow]="dimension.original == 0 && this.originalDimension.code == dimension.code">arrow_back</mat-icon>
+    <div mat-line>{{dimension.code | uppercase}}</div>
+    <div mat-line>{{dimension.original == 1 ? 'Dimensão Original' : dimension.travelDate | date: 'dd/MM/yyyy HH:mm:ss'}}</div>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+</mat-list>
+<section>
+  <div class="mat-button-row">
+    <div class="mat-flex-container">
+      <button class="mat-button" mat-raised-button color="warn" [routerLink]="['/rick',this.id, 'detail']">VOLTAR</button>
+    </div>
+  </div>
+</section>

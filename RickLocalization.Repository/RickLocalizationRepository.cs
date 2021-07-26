@@ -1,7 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using RickLocalization.Domain;
+using RickLocalization.Domain.Entities;
+using RickLocalization.Domain.Util;
 
 namespace RickLocalization.Repository
 {
@@ -33,25 +34,33 @@ namespace RickLocalization.Repository
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        public async Task<Rick[]> GetAllRicksAsync()
+        public int Count<T>() where T : class
         {
-            //TODO: DAR O INCLUDE SÓ QUANDO NECESSARIO PASSAR POR PARAM
-            IQueryable<Rick> query = _context.Ricks.Include(i =>i.Dimensions);
-            query = query.OrderByDescending(o => o.Name);
-            return await query.ToArrayAsync();
+            return _context.Ricks.Count();
         }
-
-        public Task<Rick[]> GetAllRicksAsyncByCodigoDimensao(string codigoDimensao)
+        
+        public async Task<Rick[]> GetAllRicksAsync(Pagination pagination)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Rick> query = _context.Ricks.Include(i =>i.Dimensions);
+            query = query.OrderBy(o => o.Name)
+                         .Skip((pagination.pageNumber - 1) * pagination.pageSize)
+                         .Take(pagination.pageSize).AsQueryable<Rick>();
+            return await query.ToArrayAsync();
         }
 
         public async Task<Rick> GetRicksById(int RickId)
         {
-            //TODO: DAR O INCLUDE SÓ QUANDO NECESSARIO PASSAR POR PARAM
             IQueryable<Rick> query = _context.Ricks.Include(i=>i.Morty).Include(i =>i.Dimensions);
             query = query.Where(w=> w.Id == RickId).OrderByDescending(o => o.Name);
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Dimension[]> GetDimensionsByRickId(int RickId)
+        {
+            var query = _context.Dimensions.Where(w=> w.RickId == RickId)
+                         .OrderByDescending(o => o.Original)
+                         .ThenBy(o => o.TravelDate);
+            return await query.ToArrayAsync();
         }
     }
 }

@@ -1,16 +1,13 @@
-<mat-grid-list cols="2" rowHeight="2:1">
+<mat-grid-list cols="{{pageSize}}" gutterSize="10px" fxLayout fxLayout.xs="column"> 
   <mat-grid-tile *ngFor="let rick of ricks">
-    <mat-card class="example-card">
+    <mat-card>
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title>{{rick.name}}</mat-card-title>
-        <mat-card-subtitle>{{rick.name}}</mat-card-subtitle>
+        <mat-card-subtitle>{{rick.dimensions[0].code}}</mat-card-subtitle>
       </mat-card-header>
-      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-      <mat-card-content>
-        <p>
-          {{rick.description}}
-        </p>
+      <mat-card-content fxLayoutAlign="center">
+        <img mat-card-md-image [src]="getImage(rick.image)" alt="Rick and Morty">
       </mat-card-content>
       <mat-card-actions>
         <button mat-button (click)="this.openDialog(rick.id);">DELETAR</button>
@@ -19,4 +16,18 @@
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
+
+<div [hidden]="length > 0" fxLayout fxLayoutAlign="center">
+  <h2>Nenhum Rick encontrado</h2>
+</div>
+
+<div class="container" fxLayout fxLayout.xs="column">
+  <div fxFlex="10%">
+    <button class="mat-button-add" mat-flat-button color="primary" [routerLink]="['/rick']">NOVO RICK</button>
+  </div>
+  <div fxFlex="90%">
+    <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="pageEvent = $event">
+    </mat-paginator>
+  </div>
+</div>
 

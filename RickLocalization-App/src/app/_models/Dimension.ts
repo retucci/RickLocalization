@@ -1,6 +1,7 @@
 export class Dimension {
     id: number;
+    original: number;
     code: string;
-    travelDate: string;
+    travelDate: Date;
     rickId: number;
 }

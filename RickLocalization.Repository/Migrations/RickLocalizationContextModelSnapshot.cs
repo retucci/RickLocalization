@@ -16,14 +16,18 @@ namespace RickLocalization.Repository.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0");
 
-            modelBuilder.Entity("RickLocalization.Domain.Dimension", b =>
+            modelBuilder.Entity("RickLocalization.Domain.Entities.Dimension", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("varchar(4)");
+
+                    b.Property<int>("Original")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("RickId")
                         .HasColumnType("INTEGER");
@@ -38,7 +42,7 @@ namespace RickLocalization.Repository.Migrations
                     b.ToTable("Dimensions");
                 });
 
-            modelBuilder.Entity("RickLocalization.Domain.Morty", b =>
+            modelBuilder.Entity("RickLocalization.Domain.Entities.Morty", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,9 +50,6 @@ namespace RickLocalization.Repository.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -65,7 +66,7 @@ namespace RickLocalization.Repository.Migrations
                     b.ToTable("Mortys");
                 });
 
-            modelBuilder.Entity("RickLocalization.Domain.Rick", b =>
+            modelBuilder.Entity("RickLocalization.Domain.Entities.Rick", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,20 +90,20 @@ namespace RickLocalization.Repository.Migrations
                     b.ToTable("Ricks");
                 });
 
-            modelBuilder.Entity("RickLocalization.Domain.Dimension", b =>
+            modelBuilder.Entity("RickLocalization.Domain.Entities.Dimension", b =>
                 {
-                    b.HasOne("RickLocalization.Domain.Rick", "Rick")
+                    b.HasOne("RickLocalization.Domain.Entities.Rick", "Rick")
                         .WithMany("Dimensions")
                         .HasForeignKey("RickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RickLocalization.Domain.Morty", b =>
+            modelBuilder.Entity("RickLocalization.Domain.Entities.Morty", b =>
                 {
-                    b.HasOne("RickLocalization.Domain.Rick", "Rick")
+                    b.HasOne("RickLocalization.Domain.Entities.Rick", "Rick")
                         .WithOne("Morty")
-                        .HasForeignKey("RickLocalization.Domain.Morty", "RickId")
+                        .HasForeignKey("RickLocalization.Domain.Entities.Morty", "RickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

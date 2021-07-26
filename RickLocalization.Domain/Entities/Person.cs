@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RickLocalization.Domain
+namespace RickLocalization.Domain.Entities
 {
-    public class Pessoa
+    public class Person
     {
         public int Id { get; set; }
 
@@ -13,7 +13,5 @@ namespace RickLocalization.Domain
         
         [Column(TypeName = "varchar(255)")]
         public string Description { get; set; }
-
-        public string Image { get; set; }
     }
 }

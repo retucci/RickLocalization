@@ -1,12 +1,20 @@
 <h1 mat-dialog-title>VIAJAR</h1>
 <div mat-dialog-content>
   <p>Para qual dimensão o Rick vai viajar?</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Código da Dimensão</mat-label>
-    <input matInput [(ngModel)]="data.code">
-  </mat-form-field>
+  <form class='mat-form' [formGroup]="dialogForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Código da Dimensão</mat-label>
+      <input formControlName="code" matInput [(ngModel)]="data.code">
+      <mat-error *ngIf="dialogForm.get('code').hasError('required') && dialogForm.get('code').touched">
+        O Código é obrigatório
+      </mat-error>
+      <mat-error *ngIf="dialogForm.get('code').hasError('maxlength') && dialogForm.get('code').touched">
+        O Código não pode ter mais que 4 caracteres
+      </mat-error>
+    </mat-form-field>
+  </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">CANCELAR</button>
-  <button mat-button [mat-dialog-close]="data.code" cdkFocusInitial>CONFIRMAR</button>
+  <button mat-button (click)="onCloseDialog()">CANCELAR</button>
+  <button mat-button [mat-dialog-close]="data.code" cdkFocusInitial [disabled]="!dialogForm.valid">CONFIRMAR</button>
 </div>

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RickLocalization.Domain;
+using RickLocalization.Domain.Entities;
 
 namespace RickLocalization.Repository
 {
@@ -13,10 +13,5 @@ namespace RickLocalization.Repository
         public DbSet<Rick> Ricks { get; set; }
         public DbSet<Morty> Mortys { get; set; }
         public DbSet<Dimension> Dimensions { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder){
-            
-        }
-          
     }
 }

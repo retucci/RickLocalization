@@ -1,13 +1,16 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+
+import { environment } from 'src/environments/environment';
 
 import { Dimension } from '../_models/Dimension';
 import { Rick } from '../_models/Rick';
 import { DimensionService } from '../_services/dimension.service';
 import { RickService } from '../_services/rick.service';
+
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-rick',
@@ -22,9 +25,9 @@ export class RickComponent implements OnInit {
   id = 0;
   code: string;
 
-  get mortys(): FormArray {
-    return this.registerForm.get('mortys') as FormArray;
-  }
+  imageURL = 'assets/img/upload.png';
+  file: File;
+
   get dimensions(): FormArray {
     return this.registerForm.get('dimensions') as FormArray;
   }
@@ -48,29 +51,34 @@ export class RickComponent implements OnInit {
   validation() {
     this.registerForm = this.formBuilder.group({
       id: [0],
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
       image: [''],
-      qi: [0],
+      qi: ['', [Validators.required, Validators.min(0), Validators.max(999)]],
       morty: this.formBuilder.group({
         id: [0],
-        name: ['', Validators.required],
-        description: ['', Validators.required],
-        image: [''],
+        name: ['', [Validators.required, Validators.maxLength(100)]],
+        description: ['', [Validators.required, Validators.maxLength(255)]],
       }),
-      dimensions: this.formBuilder.array([]) // TODO: Add apenas um
+      dimensions: this.formBuilder.array([]) // TODO: Adicionar no validator só a posição 1
+      //  dimensions: this.formBuilder.array([]).push(this.formBuilder.group({
+      //     id: [0],
+      //     original: [1],
+      //     code: ['', [Validators.required, Validators.maxLength(4)]],
+      //  }))
     });
   }
 
   createDimension(dimension: any): FormGroup {
     return this.formBuilder.group({
         id: [dimension.id],
-        code: ['', Validators.required]
+        original: [1],
+        code: ['', [Validators.required, Validators.maxLength(4)]],
      });
   }
 
   addDimension() {
-    this.dimensions.push(this.createDimension({ id: 0, code: '' }));
+    this.dimensions.push(this.createDimension({ id: 0, code: '', original: 1 }));
   }
 
   loadRick() {
@@ -82,7 +90,7 @@ export class RickComponent implements OnInit {
 
     if (!Number(this.route.snapshot.paramMap.get('id')) || Number(this.route.snapshot.paramMap.get('id')) <= 0) {
       this.id = 0;
-      this.toastr.warning('Não foi possível recuperar o Cliente', 'Editar');
+      this.toastr.warning('Não foi possível recuperar o Rick', 'Editar');
       return;
     }
 
@@ -93,9 +101,9 @@ export class RickComponent implements OnInit {
           if (rick != null) {
             this.rick = Object.assign({}, rick);
             this.registerForm.patchValue(rick);
-            // this.rick.mortys.forEach(morty =>{
-            //     this.mortys.push(this.createMorty(morty));
-            // });
+            if (this.rick.image !== '') {
+              this.imageURL = environment.apiURL + 'Images/' + this.rick.image;
+            }
           } else {
               this.toastr.warning('Não foi possível recuperar o Rick', 'Editar');
               this.id = 0;
@@ -139,19 +147,43 @@ export class RickComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(code => {
+      if (code !== undefined) {
         const dimension = new Dimension();
         dimension.code = code;
+        dimension.original = 0;
         dimension.rickId = this.rick.id;
-        // dimension.mortyId = this.rick.mortys[0].id;
+        const dateTime = new Date();
+        dimension.travelDate = new Date(dateTime.valueOf() - dateTime.getTimezoneOffset() * 60000);
 
         this.dimensionService.postDimension(dimension).subscribe(
           (newDimension: Dimension) => {
-            this.toastr.success('Salvo com sucesso!', 'Salvar');
+             this.toastr.success('Viagem adicionada com sucesso!', 'Salvar');
           }, error => {
-            this.toastr.error('Erro ao Salvar', 'Salvar');
+             this.toastr.error('Erro ao adicionar viagem', 'Salvar');
           }
         );
+      }
     });
+  }
+
+  onFileChange(ev: any) {
+    const reader = new FileReader();
+    reader.onload = (event: any) => this.imageURL = event.target.result;
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+    this.uploadImage();
+  }
+
+  uploadImage() {
+    this.rickService.postUpload(this.id, this.file).subscribe(
+      () => {
+        this.toastr.success('Imagem atualziada com sucesso!', 'Salvar');
+        this.router.navigate([ 'rick/', this.id, 'detail']);
+      },
+      (error: any) => {
+        this.toastr.error('Erro ao realizar upload', 'Salvar');
+      },
+    );
   }
 }
 
@@ -163,13 +195,24 @@ export interface DialogData {
   selector: 'app-rick.dimension.component',
   templateUrl: 'rick.dimension.component.html',
 })
-export class RickDimensionComponent {
-
+export class RickDimensionComponent implements OnInit {
+  dialogForm: FormGroup;
   constructor(public dialogRef: MatDialogRef<RickDimensionComponent>,
+              public formBuilder: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
 
-  onNoClick(): void {
+  ngOnInit() {
+    this.validation();
+  }
+
+  validation() {
+    this.dialogForm = this.formBuilder.group({
+      code: ['', [Validators.required, Validators.maxLength(4)]]
+    });
+  }
+
+  onCloseDialog(): void {
     this.dialogRef.close();
   }
 }

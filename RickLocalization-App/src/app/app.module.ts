@@ -1,19 +1,21 @@
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MaterialModule } from './app.material.module';
 
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { DashboardComponent, DashboardDialogComponent } from './dashboard/dashboard.component';
 import { RickComponent, RickDimensionComponent } from './rick/rick.component';
+import { HistoryComponent } from './rick/history/history.component';
 
 import { ToastrModule } from 'ngx-toastr';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { MaterialModule } from './app.material.module';
-import { HistoryComponent } from './history/history.component';
+
 
 @NgModule({
   declarations: [
@@ -35,11 +37,12 @@ import { HistoryComponent } from './history/history.component';
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-    MaterialModule],
-  entryComponents: [HistoryComponent],
-  providers: [
-    // { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+    FlexLayoutModule,
+    MaterialModule
   ],
-  bootstrap: [AppComponent, HistoryComponent]
+  exports: [ ],
+  providers: [ ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

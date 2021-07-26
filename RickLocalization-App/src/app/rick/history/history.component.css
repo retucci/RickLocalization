@@ -1,0 +1,24 @@
+.mat-button-row {
+    display: table-cell;
+  }
+  
+  .mat-button-row button {
+    display: table-cell;
+    margin-right: 8px;
+  }
+  
+  .mat-flex-container {
+    display: flex;
+    justify-content: space-between;
+    width: 480px;
+  }
+  
+  .mat-button-container {
+    display: flex;
+    justify-content: center;
+    width: 120px;
+  }
+
+  .mat-button {
+      margin: 10px 10px 10px 10px;
+  }

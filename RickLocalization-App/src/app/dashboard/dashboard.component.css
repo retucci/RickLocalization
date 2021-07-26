@@ -1,12 +1,21 @@
-.example-card {
-    max-width: 300px;
-  }
-  
   .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-image: url('http://localhost:5000/Images/rick.png');
     background-size: cover;
   }
 
+  mat-grid-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   mat-grid-tile {
-    background: rgb(236, 240, 241);
+    /* background: rgb(236, 240, 241); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-button-add {
+    margin: 10px 10px 10px 10px;
   }
